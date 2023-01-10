@@ -13,7 +13,9 @@ If anybody knows how to share the entire Fusion 360 project, please let me know.
 
 Absolute encoder and joystick for swerve pilot, also trims:
 <img src="pilot.jpg" width=500/>
+
 Many buttons for everything else:
  <img src="buttons.jpg" width=500/>
+
 Audio output for target-lock feedback, also buttons:
 <img src="autopilot.jpg" width=500/>
