@@ -64,10 +64,9 @@ public:
    * TODO: do something in the case where this fails.
    */
   void initialize() {
-    // TODO: get a new neokey
-    // if (!neokey0.begin(0x30)) {
-    //   return;
-    // }
+    if (!neokey0.begin(0x30)) {
+      return;
+    }
     if (!initOne(encoder0, 0x36)) {
       return;
     }
@@ -114,12 +113,12 @@ public:
    * Reads all the sensors and writes the values into reportTx.
    */
   void sense(ReportTx& reportTx) {
-    // uint32_t buttons0 = ~neokey0.digitalReadBulk(NEOKEY_1X4_BUTTONMASK);
-    // Keys k0 = *(Keys*)&buttons0;
-    // reportTx.b1 = k0.a;
-    // reportTx.b2 = k0.b;
-    // reportTx.b3 = k0.c;
-    // reportTx.b4 = k0.d;
+    uint32_t buttons0 = ~neokey0.digitalReadBulk(NEOKEY_1X4_BUTTONMASK);
+    Keys k0 = *(Keys*)&buttons0;
+    reportTx.b1 = k0.a;
+    reportTx.b2 = k0.b;
+    reportTx.b3 = k0.c;
+    reportTx.b4 = k0.d;
 
     reportTx.b5 = not encoder0.digitalRead(SS_SWITCH);
     reportTx.b6 = not encoder1.digitalRead(SS_SWITCH);
@@ -156,48 +155,48 @@ public:
    * more than just a keypress.
    */
   void indicate(ReportRx rpt) {
-    // if (rpt == prev) {  // speed up the common case
-    //   return;
-    // }
-    // lite(neokey0, 0, 0x00ffff, rpt.i1, prev.i1);  // a
-    // lite(neokey0, 1, 0x00ffff, rpt.i2, prev.i2);  // b
-    // lite(neokey0, 2, 0x00ffff, rpt.i3, prev.i3);  // c
-    // lite(neokey0, 3, 0x00ffff, rpt.i4, prev.i4);  // d
-    // neokey0.pixels.show();
-    // prev = rpt;
+    if (rpt == prev) {  // speed up the common case
+      return;
+    }
+    lite(neokey0, 0, 0x00ffff, rpt.i1, prev.i1);  // a
+    lite(neokey0, 1, 0x00ffff, rpt.i2, prev.i2);  // b
+    lite(neokey0, 2, 0x00ffff, rpt.i3, prev.i3);  // c
+    lite(neokey0, 3, 0x00ffff, rpt.i4, prev.i4);  // d
+    neokey0.pixels.show();
+    prev = rpt;
   }
 
   /**
    * A little light show to show it's working.
    */
   void splash() {
-    // for (int i = 0; i < 4; i++) {
-    //   neokey0.pixels.setPixelColor(i, 0xffffff);
-    //   neokey0.pixels.show();
-    //   delay(25);
-    // }
-    // for (int i = 0; i < 4; i++) {
-    //   neokey0.pixels.setPixelColor(i, 0x000000);
-    //   neokey0.pixels.show();
-    //   delay(25);
-    // }
-    // for (int i = 0; i < 256; i += 16) {
-    //   for (int k = 0; k < 4; ++k) {
-    //     neokey0.pixels.setPixelColor(k, i, 0, 0);
-    //   }
-    //   neokey0.pixels.show();
-    //   delay(25);
-    // }
-    // delay(750);
-    // for (int i = 0; i < 4; i++) {
-    //   neokey0.pixels.setPixelColor(i, 0x000000);
-    // }
-    // neokey0.pixels.show();
+    for (int i = 0; i < 4; i++) {
+      neokey0.pixels.setPixelColor(i, 0xffffff);
+      neokey0.pixels.show();
+      delay(25);
+    }
+    for (int i = 0; i < 4; i++) {
+      neokey0.pixels.setPixelColor(i, 0x000000);
+      neokey0.pixels.show();
+      delay(25);
+    }
+    for (int i = 0; i < 256; i += 16) {
+      for (int k = 0; k < 4; ++k) {
+        neokey0.pixels.setPixelColor(k, i, 0, 0);
+      }
+      neokey0.pixels.show();
+      delay(25);
+    }
+    delay(750);
+    for (int i = 0; i < 4; i++) {
+      neokey0.pixels.setPixelColor(i, 0x000000);
+    }
+    neokey0.pixels.show();
   }
   bool initialized{};
 private:
-  //Adafruit_NeoKey_1x4 neokey0; // broken?  get another one
-  //ReportRx prev;
+  Adafruit_NeoKey_1x4 neokey0;
+  ReportRx prev;
   Adafruit_seesaw encoder0;
   Adafruit_seesaw encoder1;
   Adafruit_seesaw encoder2;
@@ -209,11 +208,11 @@ private:
   /**
    * Changes the state of one key, if the new state is different.
    */
-  // void lite(Adafruit_NeoKey_1x4& key, int i, uint32_t color, bool state, bool previousState) {
-  //   if (state == previousState) {
-  //     return;
-  //   }
-  //   key.pixels.setPixelColor(i, state ? color : 0x000000);
-  // }
+  void lite(Adafruit_NeoKey_1x4& key, int i, uint32_t color, bool state, bool previousState) {
+    if (state == previousState) {
+      return;
+    }
+    key.pixels.setPixelColor(i, state ? color : 0x000000);
+  }
 };
 #endif  // SENSOR_H

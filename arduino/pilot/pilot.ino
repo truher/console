@@ -16,7 +16,7 @@ Sensor sensor;
 void setup() {
   pinMode(LED_PIN, OUTPUT);
   sensor.initialize();
-  //sensor.splash();
+  sensor.splash();
 }
 
 
@@ -36,9 +36,9 @@ void loop() {
   // for this demo we loop back.
   // TODO: take this out, do it in the RIO.
   ///////////////////////
-  // reportRx_ = *(ReportRx*)((char*)(&reportTx_) + 16);
+  reportRx = *(ReportRx*)((char*)(&reportTx) + 16);
   ///////////////////////
   // TODO: remove the above line
   ///////////////////////
-  // sensor_.indicate(reportRx_);
+  sensor.indicate(reportRx);
 }
